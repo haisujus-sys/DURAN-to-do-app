@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character encoding and viewport responsiveness -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity To-Do App</title>
+    
+    <!-- Link to external stylesheet for styling -->
+    <link rel="stylesheet" href="activity-style.css">
+</head>
+<body>
+    <!-- Main container with two-column layout -->
+    <div class="app-container">
+        
+        <!-- LEFT SIDE: Sidebar Panel -->
+        <aside class="sidebar">
+            <!-- Sidebar header and title section -->
+            <div class="sidebar-header">
+                <h1 class="app-title">Activity To-Do App</h1>
+                <p class="app-subtitle">Goal: Build Functional To-Do List.</p>
+            </div>
+
+            <!-- Features section -->
+            <section class="sidebar-section">
+                <h2 class="section-title">Features</h2>
+                <ul class="features-list">
+                    <li class="feature-item">Add new tasks</li>
+                    <li class="feature-item">Mark tasks as complete</li>
+                    <li class="feature-item">Delete tasks</li>
+                </ul>
+            </section>
+
+            <!-- Sidebar footer -->
+            <footer class="sidebar-footer">
+                <p class="footer-text">We will use HTML for structure, CSS for styling, and JS for logic.</p>
+            </footer>
+        </aside>
+
+        <!-- RIGHT SIDE: Main Board Area -->
+        <main class="main-board">
+            <!-- Board header -->
+            <div class="board-header">
+                <h2 class="board-title">Your Tasks</h2>
+                <p class="board-subtitle">Manage your activities and projects</p>
+            </div>
+
+            <!-- Board content container with grid layout -->
+            <div class="board-content">
+                <!-- Task cards container using CSS Grid -->
+                <div id="cardsContainer" class="cards-container">
+                    
+                    <!-- Card 1: Social Media -->
+                    <article class="card" id="card-1">
+                        <div class="card-header">
+                            <h3 class="card-title">Social Media</h3>
+                            <button class="card-delete-btn" aria-label="Delete card" onclick="deleteCard('card-1')">✕</button>
+                        </div>
+                        <ul class="card-tasks">
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Plan social content</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Build content calendar</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Plan promotion and distribution</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                        </ul>
+                        <div class="card-input-section">
+                            <input type="text" class="add-task-input" placeholder="Add a new task..." onkeypress="handleAddTask(event, this)">
+                            <button class="add-task-btn" onclick="addTaskToCard(this)">Add</button>
+                        </div>
+                    </article>
+
+                    <!-- Card 2: Content Strategy -->
+                    <article class="card" id="card-2">
+                        <div class="card-header">
+                            <h3 class="card-title">Content Strategy</h3>
+                            <button class="card-delete-btn" aria-label="Delete card" onclick="deleteCard('card-2')">✕</button>
+                        </div>
+                        <ul class="card-tasks">
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Define target audience</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Research competitor strategies</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Create content roadmap</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                        </ul>
+                        <div class="card-input-section">
+                            <input type="text" class="add-task-input" placeholder="Add a new task..." onkeypress="handleAddTask(event, this)">
+                            <button class="add-task-btn" onclick="addTaskToCard(this)">Add</button>
+                        </div>
+                    </article>
+
+                    <!-- Card 3: Email -->
+                    <article class="card" id="card-3">
+                        <div class="card-header">
+                            <h3 class="card-title">Email</h3>
+                            <button class="card-delete-btn" aria-label="Delete card" onclick="deleteCard('card-3')">✕</button>
+                        </div>
+                        <ul class="card-tasks">
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Write subject line</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Setup sender information</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Create call-to-action button</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                            <li class="card-task">
+                                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                                <span class="task-content">Schedule email sending</span>
+                                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                        </ul>
+                        <div class="card-input-section">
+                            <input type="text" class="add-task-input" placeholder="Add a new task..." onkeypress="handleAddTask(event, this)">
+                            <button class="add-task-btn" onclick="addTaskToCard(this)">Add</button>
+                        </div>
+                    </article>
+
+                </div>
+
+                <!-- Add New Card Button -->
+                <div class="add-card-btn-container">
+                    <button class="add-card-btn" onclick="addNewCard()">
+                        <span class="plus-icon">+</span>
+                        <span class="add-text">Add New Task Card</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Link to external JavaScript file for functionality -->
+    <script src="activity-script.js"></script>
+</body>
+</html>

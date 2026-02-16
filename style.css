@@ -1,0 +1,363 @@
+/* ============================================
+   Global Styles and Reset
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ============================================
+   Body and Background Styles
+   ============================================ */
+
+body {
+    /* Gradient background: purple to blue to teal */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+    background-size: 400% 400%;
+    /* Smooth animated gradient effect */
+    animation: gradientShift 15s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Keyframe animation for gradient background shift */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ============================================
+   Container and Layout
+   ============================================ */
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    /* Add subtle animation on page load */
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Keyframe animation for container slide-in effect */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Header Styles
+   ============================================ */
+
+.header {
+    /* Header background with gradient */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+/* ============================================
+   Main Content Section
+   ============================================ */
+
+.main-content {
+    padding: 30px;
+}
+
+/* ============================================
+   Input Section Styles
+   ============================================ */
+
+.input-section {
+    margin-bottom: 30px;
+}
+
+.input-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+/* Styling for the task input field */
+.task-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+/* Focus state for input field */
+.task-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Placeholder text styling */
+.task-input::placeholder {
+    color: #999;
+}
+
+/* Styling for the add button */
+.add-btn {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+/* Hover state for add button */
+.add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Active state for add button */
+.add-btn:active {
+    transform: translateY(0);
+}
+
+/* ============================================
+   Task Section and List Styles
+   ============================================ */
+
+.task-section {
+    margin-bottom: 20px;
+}
+
+.task-list {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+/* Individual task item styling */
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    animation: taskAppear 0.3s ease-out;
+}
+
+/* Animation for new tasks appearing */
+@keyframes taskAppear {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Hover state for task items */
+.task-item:hover {
+    background: #f0f0f0;
+    transform: translateX(5px);
+}
+
+/* Styling for the checkbox input */
+.task-checkbox {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    accent-color: #667eea;
+    flex-shrink: 0;
+}
+
+/* Task text styling */
+.task-text {
+    flex: 1;
+    font-size: 1.05rem;
+    color: #333;
+    word-break: break-word;
+}
+
+/* Styling for completed tasks (line-through effect) */
+.task-item.completed .task-text {
+    color: #999;
+    text-decoration: line-through;
+}
+
+/* Delete button styling */
+.delete-btn {
+    padding: 8px 14px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* Hover state for delete button */
+.delete-btn:hover {
+    background: #ff5252;
+    transform: scale(1.05);
+}
+
+/* Active state for delete button */
+.delete-btn:active {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   Empty State Styling
+   ============================================ */
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 1.1rem;
+    display: none;
+}
+
+/* Show empty state when task list is empty */
+.empty-state.show {
+    display: block;
+}
+
+/* ============================================
+   Footer Styles
+   ============================================ */
+
+.footer {
+    text-align: center;
+    color: #667eea;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+/* ============================================
+   Responsive Design - Tablets
+   ============================================ */
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .input-wrapper {
+        flex-direction: column;
+    }
+
+    .task-input,
+    .add-btn {
+        width: 100%;
+    }
+
+    .task-item {
+        flex-wrap: wrap;
+    }
+}
+
+/* ============================================
+   Responsive Design - Mobile Devices
+   ============================================ */
+
+@media (max-width: 480px) {
+    .container {
+        border-radius: 15px;
+    }
+
+    .header {
+        padding: 30px 20px;
+    }
+
+    .header h1 {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
+
+    .main-content {
+        padding: 15px;
+    }
+
+    .task-input {
+        padding: 12px 14px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    .add-btn {
+        padding: 12px 20px;
+    }
+
+    .task-item {
+        padding: 14px 12px;
+        gap: 10px;
+    }
+
+    .task-text {
+        font-size: 1rem;
+    }
+
+    .delete-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+}
