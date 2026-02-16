@@ -1,206 +1,202 @@
 /* ============================================
-   To-Do App JavaScript - Main Functionality
+   Activity To-Do App JavaScript - Main Functionality
    ============================================ */
 
-// Get references to DOM elements
-const taskInput = document.getElementById('taskInput');
-const addBtn = document.getElementById('addBtn');
-const taskList = document.getElementById('taskList');
-const taskCount = document.getElementById('taskCount');
-const emptyState = document.getElementById('emptyState');
+// Get reference to the cards container
+const cardsContainer = document.getElementById('cardsContainer');
 
-// Array to store tasks in memory
-let tasks = [];
+// Counter for generating unique card IDs
+let cardCounter = 4;
 
 // localStorage key for persisting data
-const STORAGE_KEY = 'toDoTasks';
+const STORAGE_KEY = 'activityToDo';
 
 /* ============================================
    Initialize Application
    ============================================ */
 
 /**
- * Initialize the app by loading tasks from localStorage
- * and setting up event listeners
+ * Initialize the app on page load
+ * Load saved cards from localStorage
  */
-function initApp() {
-    // Load tasks from localStorage on page load
-    loadTasks();
-    
-    // Render the task list
-    renderTasks();
-    
-    // Set up event listeners
-    setupEventListeners();
-}
+document.addEventListener('DOMContentLoaded', function() {
+    // Load cards from localStorage if available
+    loadCards();
+});
 
 /* ============================================
-   Event Listeners Setup
+   Add New Card Function
    ============================================ */
 
 /**
- * Set up all event listeners for the application
+ * Add a new empty task card to the board
+ * User will be able to populate it with tasks
  */
-function setupEventListeners() {
-    // Add task when clicking the "Add Task" button
-    addBtn.addEventListener('click', addTask);
+function addNewCard() {
+    // Generate unique ID for the new card
+    cardCounter++;
+    const cardId = `card-${cardCounter}`;
     
-    // Add task when pressing Enter key in the input field
-    taskInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            addTask();
-        }
-    });
+    // Create the new card element
+    const newCard = document.createElement('article');
+    newCard.className = 'card';
+    newCard.id = cardId;
     
-    // Clear input field on focus (optional UX improvement)
-    taskInput.addEventListener('focus', () => {
-        taskInput.value = '';
-    });
+    // Get the card color class (rotate between different styles)
+    const colorIndex = cardCounter % 3;
+    
+    // Build the card HTML
+    newCard.innerHTML = `
+        <div class="card-header">
+            <h3 class="card-title">New Task</h3>
+            <button class="card-delete-btn" aria-label="Delete card" onclick="deleteCard('${cardId}')">✕</button>
+        </div>
+        <ul class="card-tasks">
+            <!-- Tasks will be added here -->
+        </ul>
+        <div class="card-input-section">
+            <input type="text" class="add-task-input" placeholder="Add a new task..." onkeypress="handleAddTask(event, this)">
+            <button class="add-task-btn" onclick="addTaskToCard(this)">Add</button>
+        </div>
+    `;
+    
+    // Insert the new card before the add button
+    cardsContainer.appendChild(newCard);
+    
+    // Save changes to localStorage
+    saveCards();
 }
 
 /* ============================================
-   Task Management Functions
+   Add Task to Card Function
    ============================================ */
 
 /**
- * Add a new task to the list
- * Validates that the input is not empty
+ * Add a new task to a specific card
+ * @param {Element} button - The add button element clicked
  */
-function addTask() {
-    const taskText = taskInput.value.trim();
+function addTaskToCard(button) {
+    // Get the input field in the same card
+    const input = button.previousElementSibling;
+    const taskText = input.value.trim();
     
     // Validate that task is not empty
     if (taskText === '') {
-        alert('Please enter a task!');
-        taskInput.focus();
+        input.focus();
         return;
     }
     
-    // Create a new task object with unique ID and timestamp
-    const newTask = {
-        id: Date.now(), // Use timestamp as unique ID
-        text: taskText,
-        completed: false,
-        createdAt: new Date().toLocaleString()
-    };
+    // Get the task list in this card
+    const taskList = button.closest('.card').querySelector('.card-tasks');
     
-    // Add task to the tasks array
-    tasks.push(newTask);
+    // Create a new task item
+    const newTask = document.createElement('li');
+    newTask.className = 'card-task';
     
-    // Save tasks to localStorage
-    saveTasks();
+    // Build the task HTML with checkbox, text, and delete button
+    newTask.innerHTML = `
+        <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+        <span class="task-content">${escapeHtml(taskText)}</span>
+        <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+    `;
+    
+    // Append the new task to the task list
+    taskList.appendChild(newTask);
     
     // Clear the input field
-    taskInput.value = '';
-    
-    // Re-render the task list
-    renderTasks();
+    input.value = '';
     
     // Focus back on input for better UX
-    taskInput.focus();
-}
-
-/**
- * Toggle the completed status of a task
- * @param {number} taskId - The unique ID of the task
- */
-function toggleTask(taskId) {
-    // Find the task by ID
-    const task = tasks.find(t => t.id === taskId);
+    input.focus();
     
-    if (task) {
-        // Toggle the completed status
-        task.completed = !task.completed;
-        
-        // Save the updated tasks to localStorage
-        saveTasks();
-        
-        // Re-render the task list to show the updated state
-        renderTasks();
-    }
-}
-
-/**
- * Delete a task from the list
- * @param {number} taskId - The unique ID of the task to delete
- */
-function deleteTask(taskId) {
-    // Filter out the task with the matching ID
-    tasks = tasks.filter(t => t.id !== taskId);
-    
-    // Save the updated tasks to localStorage
-    saveTasks();
-    
-    // Re-render the task list
-    renderTasks();
+    // Save changes to localStorage
+    saveCards();
 }
 
 /* ============================================
-   Rendering Functions
+   Handle Enter Key for Task Input
    ============================================ */
 
 /**
- * Render all tasks in the DOM
- * Dynamically creates task items and appends them to the task list
+ * Handle Enter key press in task input field
+ * Adds task when user presses Enter
+ * @param {Event} event - The keyboard event
+ * @param {Element} input - The input element
  */
-function renderTasks() {
-    // Clear the existing task list
-    taskList.innerHTML = '';
-    
-    // Check if there are any tasks
-    if (tasks.length === 0) {
-        // Show the empty state message
-        emptyState.classList.add('show');
-        taskCount.textContent = '0';
-        return;
-    }
-    
-    // Hide the empty state message
-    emptyState.classList.remove('show');
-    
-    // Loop through each task and create DOM elements
-    tasks.forEach(task => {
-        // Create a list item
-        const listItem = document.createElement('li');
-        listItem.className = 'task-item';
+function handleAddTask(event, input) {
+    // Check if Enter key was pressed
+    if (event.key === 'Enter') {
+        event.preventDefault();
         
-        // Add the 'completed' class if task is marked as complete
-        if (task.completed) {
-            listItem.classList.add('completed');
+        // Get the add button in the same section
+        const addBtn = input.nextElementSibling;
+        
+        // Trigger the add task function
+        addTaskToCard(addBtn);
+    }
+}
+
+/* ============================================
+   Toggle Task Completion
+   ============================================ */
+
+/**
+ * Toggle the completed state of a task
+ * Adds strike-through effect when completed
+ * @param {Element} checkbox - The checkbox input element
+ */
+function toggleTask(checkbox) {
+    // Get the parent task item
+    const taskItem = checkbox.closest('.card-task');
+    
+    // The CSS will handle the strike-through effect
+    // This is purely for data persistence
+    
+    // Save changes to localStorage
+    saveCards();
+}
+
+/* ============================================
+   Delete Task Function
+   ============================================ */
+
+/**
+ * Delete a task from the card
+ * @param {Element} button - The delete button element
+ */
+function deleteTask(button) {
+    // Get the parent task item
+    const taskItem = button.closest('.card-task');
+    
+    // Remove the task from the DOM
+    taskItem.remove();
+    
+    // Save changes to localStorage
+    saveCards();
+}
+
+/* ============================================
+   Delete Card Function
+   ============================================ */
+
+/**
+ * Delete an entire card from the board
+ * @param {string} cardId - The ID of the card to delete
+ */
+function deleteCard(cardId) {
+    // Confirm deletion with user
+    if (confirm('Are you sure you want to delete this card? This action cannot be undone.')) {
+        // Find the card element by ID
+        const card = document.getElementById(cardId);
+        
+        // Remove the card from the DOM
+        if (card) {
+            card.remove();
         }
         
-        // Create checkbox input
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'task-checkbox';
-        checkbox.checked = task.completed;
-        // Toggle task status when checkbox is clicked
-        checkbox.addEventListener('change', () => toggleTask(task.id));
-        
-        // Create task text span
-        const textSpan = document.createElement('span');
-        textSpan.className = 'task-text';
-        textSpan.textContent = task.text;
-        
-        // Create delete button
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.textContent = 'Delete';
-        // Delete task when button is clicked
-        deleteBtn.addEventListener('click', () => deleteTask(task.id));
-        
-        // Append all elements to the list item
-        listItem.appendChild(checkbox);
-        listItem.appendChild(textSpan);
-        listItem.appendChild(deleteBtn);
-        
-        // Append the list item to the task list
-        taskList.appendChild(listItem);
-    });
-    
-    // Update the task counter to show remaining incomplete tasks
-    const incompleteTasks = tasks.filter(t => !t.completed).length;
-    taskCount.textContent = incompleteTasks;
+        // Save changes to localStorage
+        saveCards();
+    }
 }
 
 /* ============================================
@@ -208,43 +204,173 @@ function renderTasks() {
    ============================================ */
 
 /**
- * Save all tasks to localStorage
- * Converts the tasks array to JSON and stores it
+ * Save all cards and their tasks to localStorage
+ * Converts the DOM structure into a JSON format
  */
-function saveTasks() {
-    // Convert tasks array to JSON string
-    const tasksJSON = JSON.stringify(tasks);
+function saveCards() {
+    // Get all cards from the DOM
+    const cards = document.querySelectorAll('.card');
     
-    // Store in localStorage with the predefined key
-    localStorage.setItem(STORAGE_KEY, tasksJSON);
+    // Create array to store card data
+    const cardsData = [];
+    
+    // Loop through each card and extract its data
+    cards.forEach(card => {
+        // Get the card title
+        const title = card.querySelector('.card-title').textContent;
+        
+        // Get all tasks in this card
+        const tasks = [];
+        card.querySelectorAll('.card-task').forEach(taskItem => {
+            const checkbox = taskItem.querySelector('.task-checkbox');
+            const content = taskItem.querySelector('.task-content');
+            
+            // Store task data
+            tasks.push({
+                text: content.textContent,
+                completed: checkbox.checked
+            });
+        });
+        
+        // Store card data
+        cardsData.push({
+            id: card.id,
+            title: title,
+            tasks: tasks
+        });
+    });
+    
+    // Save to localStorage as JSON
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cardsData));
 }
 
 /**
- * Load tasks from localStorage
- * Retrieves saved tasks and populates the tasks array
+ * Load cards from localStorage and restore them to the DOM
  */
-function loadTasks() {
-    // Retrieve the JSON string from localStorage
-    const tasksJSON = localStorage.getItem(STORAGE_KEY);
+function loadCards() {
+    // Get the saved data from localStorage
+    const savedData = localStorage.getItem(STORAGE_KEY);
     
-    // If tasks exist in localStorage, parse and load them
-    if (tasksJSON) {
-        try {
-            tasks = JSON.parse(tasksJSON);
-        } catch (error) {
-            // Handle JSON parsing error
-            console.error('Error loading tasks from localStorage:', error);
-            tasks = [];
+    // If no saved data, return early
+    if (!savedData) {
+        return;
+    }
+    
+    try {
+        // Parse the JSON data
+        const cardsData = JSON.parse(savedData);
+        
+        // Get the current cards in the DOM
+        const existingCards = document.querySelectorAll('.card');
+        
+        // If we have existing cards, clear them first
+        // (Keep only the initial cards for first load)
+        if (existingCards.length < cardsData.length) {
+            // Load each card from saved data
+            cardsData.forEach((cardData, index) => {
+                if (index >= existingCards.length) {
+                    // Create new card if it doesn't exist
+                    createCardFromData(cardData);
+                } else {
+                    // Update existing card with saved data
+                    const card = existingCards[index];
+                    updateCardWithData(card, cardData);
+                }
+            });
         }
-    } else {
-        // Initialize with empty array if no tasks found
-        tasks = [];
+    } catch (error) {
+        // Handle JSON parsing error
+        console.error('Error loading cards from localStorage:', error);
     }
 }
 
+/**
+ * Create a new card from saved data
+ * @param {Object} cardData - The card data object
+ */
+function createCardFromData(cardData) {
+    // Create new card element
+    const newCard = document.createElement('article');
+    newCard.className = 'card';
+    newCard.id = cardData.id;
+    
+    // Update card counter if needed
+    const cardNum = parseInt(cardData.id.split('-')[1]);
+    if (cardNum > cardCounter) {
+        cardCounter = cardNum;
+    }
+    
+    // Build tasks HTML
+    let tasksHTML = '';
+    cardData.tasks.forEach(task => {
+        const checked = task.completed ? 'checked' : '';
+        tasksHTML += `
+            <li class="card-task">
+                <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)" ${checked}>
+                <span class="task-content">${escapeHtml(task.text)}</span>
+                <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+            </li>
+        `;
+    });
+    
+    // Build the card HTML
+    newCard.innerHTML = `
+        <div class="card-header">
+            <h3 class="card-title">${escapeHtml(cardData.title)}</h3>
+            <button class="card-delete-btn" aria-label="Delete card" onclick="deleteCard('${cardData.id}')">✕</button>
+        </div>
+        <ul class="card-tasks">
+            ${tasksHTML}
+        </ul>
+        <div class="card-input-section">
+            <input type="text" class="add-task-input" placeholder="Add a new task..." onkeypress="handleAddTask(event, this)">
+            <button class="add-task-btn" onclick="addTaskToCard(this)">Add</button>
+        </div>
+    `;
+    
+    // Append to container
+    cardsContainer.appendChild(newCard);
+}
+
+/**
+ * Update an existing card with saved data
+ * @param {Element} card - The card element
+ * @param {Object} cardData - The card data object
+ */
+function updateCardWithData(card, cardData) {
+    // Update card title
+    const titleElement = card.querySelector('.card-title');
+    titleElement.textContent = cardData.title;
+    
+    // Update tasks
+    const taskList = card.querySelector('.card-tasks');
+    taskList.innerHTML = '';
+    
+    cardData.tasks.forEach(task => {
+        const checked = task.completed ? 'checked' : '';
+        const taskItem = document.createElement('li');
+        taskItem.className = 'card-task';
+        taskItem.innerHTML = `
+            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)" ${checked}>
+            <span class="task-content">${escapeHtml(task.text)}</span>
+            <button class="delete-task-btn" onclick="deleteTask(this)">✕</button>
+        `;
+        taskList.appendChild(taskItem);
+    });
+}
+
 /* ============================================
-   Application Startup
+   Utility Functions
    ============================================ */
 
-// Run the initialization function when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initApp);
+/**
+ * Escape HTML special characters to prevent XSS attacks
+ * Converts & < > " ' to their HTML entities
+ * @param {string} text - The text to escape
+ * @returns {string} - The escaped text
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}

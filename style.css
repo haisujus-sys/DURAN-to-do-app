@@ -9,60 +9,415 @@
 }
 
 html, body {
+    width: 100%;
     height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body {
+    background: #f5f7fa;
+    color: #333;
+}
+
 /* ============================================
-   Body and Background Styles
+   Main App Container (Two-Column Layout)
    ============================================ */
 
-body {
-    /* Gradient background: purple to blue to teal */
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
-    background-size: 400% 400%;
-    /* Smooth animated gradient effect */
-    animation: gradientShift 15s ease infinite;
-    min-height: 100vh;
+.app-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ============================================
+   LEFT SIDEBAR STYLES
+   ============================================ */
+
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 30px;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+/* Sidebar header section */
+.sidebar-header {
+    margin-bottom: 40px;
+    animation: slideInLeft 0.5s ease-out;
+}
+
+.app-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.app-subtitle {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+/* Features section in sidebar */
+.sidebar-section {
+    flex: 1;
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.95;
+}
+
+.features-list {
+    list-style: none;
+}
+
+.feature-item {
+    padding: 12px 0;
+    font-size: 1rem;
+    opacity: 0.85;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    padding-left: 20px;
+    position: relative;
+}
+
+.feature-item:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.feature-item:hover {
+    opacity: 1;
+    padding-left: 25px;
+}
+
+.feature-item:last-child {
+    border-bottom: none;
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 20px;
+    margin-top: auto;
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+/* Animation for sidebar entrance */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   MAIN BOARD AREA STYLES
+   ============================================ */
+
+.main-board {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f5f7fa;
+    overflow: hidden;
+}
+
+/* Board header */
+.board-header {
+    padding: 30px 40px;
+    background: white;
+    border-bottom: 1px solid #e0e7ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.board-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 8px;
+}
+
+.board-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+    font-weight: 300;
+}
+
+/* Board content container */
+.board-content {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+}
+
+/* ============================================
+   CARDS CONTAINER AND GRID LAYOUT
+   ============================================ */
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+/* Individual Card Styling */
+.card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.4s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px);
+}
+
+/* Card header with title and delete button */
+.card-header {
+    padding: 20px;
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+    border-bottom: 2px solid #bae6fd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e40af;
+}
+
+/* Delete card button */
+.card-delete-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
 }
 
-/* Keyframe animation for gradient background shift */
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+.card-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: scale(1.1);
+}
+
+/* Card tasks list */
+.card-tasks {
+    list-style: none;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 250px;
+}
+
+/* Individual task item in card */
+.card-task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+}
+
+.card-task:hover {
+    background: #f1f5f9;
+    padding-left: 14px;
+}
+
+.card-task:last-child {
+    margin-bottom: 0;
+}
+
+/* Task checkbox */
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #1e40af;
+    flex-shrink: 0;
+}
+
+/* Task content text */
+.task-content {
+    flex: 1;
+    color: #333;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+/* Strike-through for completed tasks */
+.card-task input[type="checkbox"]:checked + .task-content {
+    text-decoration: line-through;
+    color: #999;
+}
+
+/* Delete task button */
+.delete-task-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+}
+
+.card-task:hover .delete-task-btn {
+    opacity: 1;
+}
+
+.delete-task-btn:hover {
+    background: rgba(239, 68, 68, 0.3);
+    transform: scale(1.1);
+}
+
+/* Card input section for adding new tasks */
+.card-input-section {
+    padding: 15px 20px;
+    background: #fafbfc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 8px;
+}
+
+.add-task-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.add-task-input:focus {
+    outline: none;
+    border-color: #1e40af;
+    box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.1);
+}
+
+/* Add task button in card */
+.add-task-btn {
+    padding: 10px 16px;
+    background: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.add-task-btn:hover {
+    background: #1e3a8a;
+    transform: translateY(-1px);
+}
+
+.add-task-btn:active {
+    transform: translateY(0);
 }
 
 /* ============================================
-   Container and Layout
+   ADD NEW CARD BUTTON
    ============================================ */
 
-.container {
-    width: 100%;
-    max-width: 600px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    /* Add subtle animation on page load */
-    animation: slideIn 0.5s ease-out;
+.add-card-btn-container {
+    display: flex;
+    margin-bottom: 20px;
 }
 
-/* Keyframe animation for container slide-in effect */
-@keyframes slideIn {
+.add-card-btn {
+    width: 100%;
+    min-height: 300px;
+    background: white;
+    border: 3px dashed #cbd5e1;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+.add-card-btn:hover {
+    border-color: #1e40af;
+    background: #f0f9ff;
+    box-shadow: 0 4px 15px rgba(30, 64, 175, 0.1);
+}
+
+.plus-icon {
+    font-size: 3rem;
+    color: #1e40af;
+    font-weight: 300;
+}
+
+.add-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e40af;
+}
+
+/* Animation for card entrance */
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -71,293 +426,256 @@ body {
 }
 
 /* ============================================
-   Header Styles
+   SCROLLBAR STYLING
    ============================================ */
 
-.header {
-    /* Header background with gradient */
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 40px 30px;
-    text-align: center;
+/* Custom scrollbar for cards container */
+.board-content::-webkit-scrollbar,
+.card-tasks::-webkit-scrollbar {
+    width: 8px;
 }
 
-.header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+.board-content::-webkit-scrollbar-track,
+.card-tasks::-webkit-scrollbar-track {
+    background: #e2e8f0;
+    border-radius: 10px;
 }
 
-.subtitle {
-    font-size: 1rem;
-    opacity: 0.9;
-    font-weight: 300;
+.board-content::-webkit-scrollbar-thumb,
+.card-tasks::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.board-content::-webkit-scrollbar-thumb:hover,
+.card-tasks::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* ============================================
-   Main Content Section
+   RESPONSIVE DESIGN - TABLETS
    ============================================ */
 
-.main-content {
-    padding: 30px;
-}
-
-/* ============================================
-   Input Section Styles
-   ============================================ */
-
-.input-section {
-    margin-bottom: 30px;
-}
-
-.input-wrapper {
-    display: flex;
-    gap: 10px;
-}
-
-/* Styling for the task input field */
-.task-input {
-    flex: 1;
-    padding: 14px 18px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-/* Focus state for input field */
-.task-input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-/* Placeholder text styling */
-.task-input::placeholder {
-    color: #999;
-}
-
-/* Styling for the add button */
-.add-btn {
-    padding: 14px 28px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-/* Hover state for add button */
-.add-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-}
-
-/* Active state for add button */
-.add-btn:active {
-    transform: translateY(0);
-}
-
-/* ============================================
-   Task Section and List Styles
-   ============================================ */
-
-.task-section {
-    margin-bottom: 20px;
-}
-
-.task-list {
-    list-style: none;
-    margin-bottom: 20px;
-}
-
-/* Individual task item styling */
-.task-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 18px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-    animation: taskAppear 0.3s ease-out;
-}
-
-/* Animation for new tasks appearing */
-@keyframes taskAppear {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Hover state for task items */
-.task-item:hover {
-    background: #f0f0f0;
-    transform: translateX(5px);
-}
-
-/* Styling for the checkbox input */
-.task-checkbox {
-    width: 22px;
-    height: 22px;
-    cursor: pointer;
-    accent-color: #667eea;
-    flex-shrink: 0;
-}
-
-/* Task text styling */
-.task-text {
-    flex: 1;
-    font-size: 1.05rem;
-    color: #333;
-    word-break: break-word;
-}
-
-/* Styling for completed tasks (line-through effect) */
-.task-item.completed .task-text {
-    color: #999;
-    text-decoration: line-through;
-}
-
-/* Delete button styling */
-.delete-btn {
-    padding: 8px 14px;
-    background: #ff6b6b;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-/* Hover state for delete button */
-.delete-btn:hover {
-    background: #ff5252;
-    transform: scale(1.05);
-}
-
-/* Active state for delete button */
-.delete-btn:active {
-    transform: scale(0.98);
-}
-
-/* ============================================
-   Empty State Styling
-   ============================================ */
-
-.empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: #999;
-    font-size: 1.1rem;
-    display: none;
-}
-
-/* Show empty state when task list is empty */
-.empty-state.show {
-    display: block;
-}
-
-/* ============================================
-   Footer Styles
-   ============================================ */
-
-.footer {
-    text-align: center;
-    color: #667eea;
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 12px;
-}
-
-/* ============================================
-   Responsive Design - Tablets
-   ============================================ */
-
-@media (max-width: 768px) {
-    .header h1 {
-        font-size: 2rem;
-    }
-
-    .main-content {
-        padding: 20px;
-    }
-
-    .input-wrapper {
-        flex-direction: column;
-    }
-
-    .task-input,
-    .add-btn {
-        width: 100%;
-    }
-
-    .task-item {
-        flex-wrap: wrap;
-    }
-}
-
-/* ============================================
-   Responsive Design - Mobile Devices
-   ============================================ */
-
-@media (max-width: 480px) {
-    .container {
-        border-radius: 15px;
-    }
-
-    .header {
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 240px;
         padding: 30px 20px;
     }
 
-    .header h1 {
-        font-size: 1.8rem;
+    .app-title {
+        font-size: 1.5rem;
     }
 
-    .subtitle {
+    .cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .board-header {
+        padding: 25px 30px;
+    }
+
+    .board-content {
+        padding: 25px 30px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - MOBILE DEVICES
+   ============================================ */
+
+@media (max-width: 768px) {
+    /* Stack layout vertically on mobile */
+    .app-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-height: 300px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-header {
+        margin-bottom: 20px;
+    }
+
+    .app-title {
+        font-size: 1.4rem;
+    }
+
+    .sidebar-section {
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    .feature-item {
+        padding: 8px 0 8px 20px;
         font-size: 0.9rem;
     }
 
-    .main-content {
+    .main-board {
+        height: auto;
+        min-height: calc(100vh - 300px);
+    }
+
+    .board-header {
+        padding: 20px;
+    }
+
+    .board-title {
+        font-size: 1.5rem;
+    }
+
+    .board-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .board-content {
+        padding: 20px;
+    }
+
+    .cards-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .card {
+        max-height: 500px;
+    }
+
+    .card-header {
         padding: 15px;
     }
 
-    .task-input {
-        padding: 12px 14px;
-        font-size: 16px; /* Prevents zoom on iOS */
+    .card-title {
+        font-size: 1.1rem;
     }
 
-    .add-btn {
-        padding: 12px 20px;
+    .card-tasks {
+        padding: 15px;
+        max-height: 250px;
     }
 
-    .task-item {
-        padding: 14px 12px;
-        gap: 10px;
+    .card-task {
+        padding: 10px;
+        margin-bottom: 8px;
     }
 
-    .task-text {
+    .delete-task-btn {
+        opacity: 1;
+    }
+
+    .card-input-section {
+        padding: 12px 15px;
+        gap: 6px;
+    }
+
+    .add-task-input {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
+    .add-task-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    .add-card-btn {
+        min-height: 200px;
+    }
+
+    .plus-icon {
+        font-size: 2.5rem;
+    }
+
+    .add-text {
+        font-size: 1rem;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - SMALL MOBILE DEVICES
+   ============================================ */
+
+@media (max-width: 480px) {
+    .sidebar {
+        max-height: auto;
+        padding: 20px;
+    }
+
+    .app-title {
+        font-size: 1.2rem;
+    }
+
+    .app-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .section-title {
         font-size: 1rem;
     }
 
-    .delete-btn {
-        padding: 6px 12px;
+    .feature-item {
         font-size: 0.85rem;
+        padding: 6px 0 6px 18px;
+    }
+
+    .board-header {
+        padding: 15px;
+    }
+
+    .board-title {
+        font-size: 1.3rem;
+    }
+
+    .board-content {
+        padding: 15px;
+    }
+
+    .cards-container {
+        gap: 12px;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .card-header {
+        padding: 12px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-delete-btn {
+        width: 24px;
+        height: 24px;
+    }
+
+    .card-input-section {
+        padding: 10px 12px;
+        flex-direction: column;
+    }
+
+    .add-task-input,
+    .add-task-btn {
+        width: 100%;
+    }
+
+    .add-card-btn {
+        min-height: 150px;
+        border-radius: 12px;
+    }
+
+    .plus-icon {
+        font-size: 2rem;
     }
 }
